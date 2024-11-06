@@ -5,6 +5,7 @@ import javax.jms.*;
 import com.ibm.mq.jms.MQConnectionFactory;
 import com.ibm.mq.jms.JMSC;
 import com.ibm.msg.client.wmq.WMQConstants;
+import org.json.JSONObject;
 
 public class Subscriber {
 
@@ -41,7 +42,7 @@ public class Subscriber {
             Topic topic = session.createTopic("topic://TOPICO1");
 
             // Nome da assinatura durável
-            String subscriptionName = "ASSINATURA01";
+            String subscriptionName = "ASSINATURA02";
             
             // Cria um subscriber durável associado ao tópico e nome da assinatura
             TopicSubscriber durableSubscriber = session.createDurableSubscriber(topic, subscriptionName);
@@ -59,6 +60,29 @@ public class Subscriber {
                             // Converte a mensagem para o tipo TextMessage e imprime o conteúdo
                             TextMessage textMessage = (TextMessage) message;
                             System.out.println("Mensagem recebida: " + textMessage.getText());
+
+                            // Exibe os metadados da mensagem
+                            JSONObject metadataJson = new JSONObject();
+                            metadataJson.put("JMSMessageID", message.getJMSMessageID());
+                            metadataJson.put("JMSCorrelationID", message.getJMSCorrelationID());
+                            metadataJson.put("JMSTimestamp", message.getJMSTimestamp());
+                            metadataJson.put("JMSPriority", message.getJMSPriority());
+                            metadataJson.put("JMSDeliveryMode", message.getJMSDeliveryMode());
+                            metadataJson.put("JMSExpiration", message.getJMSExpiration());
+                            metadataJson.put("JMSType", message.getJMSType());
+                            
+                            System.out.println("Metadados da mensagem: " + metadataJson.toString());
+
+                            // Exibe os headers da mensagem
+                            JSONObject headersJson = new JSONObject();
+                            headersJson.put("JMSDestination", message.getJMSDestination());
+                            headersJson.put("JMSDeliveryMode", message.getJMSDeliveryMode());
+                            headersJson.put("JMSPriority", message.getJMSPriority());
+                            headersJson.put("JMSTimestamp", message.getJMSTimestamp());
+                            headersJson.put("JMSCorrelationID", message.getJMSCorrelationID());
+                            
+                            System.out.println("Headers da mensagem: " + headersJson.toString());
+
                         } catch (JMSException e) {
                             // Imprime o stack trace se houver uma exceção ao processar a mensagem
                             e.printStackTrace();
