@@ -1,0 +1,10 @@
+version: '3'
+services:
+  subscriber:
+    build: .
+    ports:
+      - "8081:8081"  # Adapte as portas conforme necessário
+    volumes:
+      - .:/app  # Mapeia o diretório atual para o contêiner
+    environment:
+      - JAVA_OPTS=-Dexec.mainClass="com.exemplo.subscriber.Subscriber"  # Passando variáveis de ambiente, se necessário
